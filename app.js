@@ -28,7 +28,7 @@ document.querySelector('.btn-roll').addEventListener('click', () => {
 	let dice = Math.ceil(Math.random() * 6);
 
 	// 2. Mostrar o Resultado
-	const diceDOM = document.querySelector('.dice'); 
+	const diceDOM = document.querySelector('.dice');
 	diceDOM.style.display = 'block';
   diceDOM.src = 'dice-' + dice + '.png';
   
@@ -38,9 +38,29 @@ document.querySelector('.btn-roll').addEventListener('click', () => {
     roundScore += dice;
     document.querySelector('#current-' + activePlayer).textContent = roundScore;
   } else {
-    // Próximo jogador
-    
-    activePlayer = (activePlayer) ? 0 : 1;    
+    // Próximo jogador    
+    nextPlayer();
+  }
+});
+
+  document.querySelector('.btn-hold').addEventListener('click', () => {
+    //Adicionar roundScore a pontuação global do jogador ativo
+    scores[activePlayer] += roundScore;
+    //Atualizar a UI
+    document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
+    //Checar se o jogador ganhou o jogo
+    if(scores[activePlayer] >= 20) {
+      document.getElementById('name-' + activePlayer).textContent = 'Winner!';
+      document.querySelector('.dice').style.display = 'none';
+      document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+      document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+    } else {
+      nextPlayer();
+    }
+});
+
+function nextPlayer() {
+  activePlayer = (activePlayer) ? 0 : 1;    
     roundScore = 0;
     document.getElementById('current-0').textContent = '0';
     document.getElementById('current-1').textContent = '0';
@@ -49,5 +69,4 @@ document.querySelector('.btn-roll').addEventListener('click', () => {
     document.querySelector('.player-1-panel').classList.toggle('active'); 
 
     document.querySelector('.dice').style.display = 'none';
-  }
-});
+}
