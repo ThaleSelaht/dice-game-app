@@ -12,9 +12,7 @@ let scores, roundScores, activePlayer;
 
 scores = [0,0];
 roundScore = 0;
-activePlayer = 1;
-
-//document.querySelector('#current-' + activePlayer).textContent = dice;
+activePlayer = 0;
 
 //Ocultando o dado inicialmente
 document.querySelector('.dice').style.display = 'none';
@@ -32,6 +30,24 @@ document.querySelector('.btn-roll').addEventListener('click', () => {
 	// 2. Mostrar o Resultado
 	const diceDOM = document.querySelector('.dice'); 
 	diceDOM.style.display = 'block';
-	diceDOM.src = 'dice-' + dice + '.png';
-	// 3. Atualizar a pontuação da rodada SE o nº obtivo NÃO for 1
+  diceDOM.src = 'dice-' + dice + '.png';
+  
+  // 3. Atualizar a pontuação da rodada SE o nº obtivo NÃO for 1
+  if(dice > 1) {
+    // Adicionar valor do dice ao roundScore
+    roundScore += dice;
+    document.querySelector('#current-' + activePlayer).textContent = roundScore;
+  } else {
+    // Próximo jogador
+    
+    activePlayer = (activePlayer) ? 0 : 1;    
+    roundScore = 0;
+    document.getElementById('current-0').textContent = '0';
+    document.getElementById('current-1').textContent = '0';
+
+    document.querySelector('.player-0-panel').classList.toggle('active'); 
+    document.querySelector('.player-1-panel').classList.toggle('active'); 
+
+    document.querySelector('.dice').style.display = 'none';
+  }
 });
