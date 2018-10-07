@@ -8,44 +8,49 @@ GAME RULES:
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
-let scores, roundScores, activePlayer;
+let scores, roundScores, activePlayer, gameIsPlaying;
 
 init();
 
 document.querySelector('.btn-roll').addEventListener('click', () => {
-	// 1. Número Randômico
-	let dice = Math.ceil(Math.random() * 6);
+  if(gameIsPlaying) {
+    // 1. Número Randômico
+    let dice = Math.ceil(Math.random() * 6);
 
-	// 2. Mostrar o Resultado
-	const diceDOM = document.querySelector('.dice');
-	diceDOM.style.display = 'block';
-  diceDOM.src = 'dice-' + dice + '.png';
-  
-  // 3. Atualizar a pontuação da rodada SE o nº obtivo NÃO for 1
-  if(dice > 1) {
-    // Adicionar valor do dice ao roundScore
-    roundScore += dice;
-    document.querySelector('#current-' + activePlayer).textContent = roundScore;
-  } else {
-    // Próximo jogador    
-    nextPlayer();
-  }
+    // 2. Mostrar o Resultado
+    const diceDOM = document.querySelector('.dice');
+    diceDOM.style.display = 'block';
+    diceDOM.src = 'dice-' + dice + '.png';
+    
+    // 3. Atualizar a pontuação da rodada SE o nº obtivo NÃO for 1
+    if(dice > 1) {
+      // Adicionar valor do dice ao roundScore
+      roundScore += dice;
+      document.querySelector('#current-' + activePlayer).textContent = roundScore;
+    } else {
+      // Próximo jogador
+      nextPlayer();
+    }
+  }	
 });
 
   document.querySelector('.btn-hold').addEventListener('click', () => {
-    //Adicionar roundScore a pontuação global do jogador ativo
-    scores[activePlayer] += roundScore;
-    //Atualizar a UI
-    document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
-    //Checar se o jogador ganhou o jogo
-    if(scores[activePlayer] >= 20) {
-      document.getElementById('name-' + activePlayer).textContent = 'Winner!';
-      document.querySelector('.dice').style.display = 'none';
-      document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
-      document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
-    } else {
-      nextPlayer();
-    }
+    if(gameIsPlaying) {
+      //Adicionar roundScore a pontuação global do jogador ativo
+      scores[activePlayer] += roundScore;
+      //Atualizar a UI
+      document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
+      //Checar se o jogador ganhou o jogo
+      if(scores[activePlayer] >= 20) {
+        document.getElementById('name-' + activePlayer).textContent = 'Winner!';
+        document.querySelector('.dice').style.display = 'none';
+        document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+        document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+        gameIsPlaying = false;
+      } else {
+        nextPlayer();
+      }
+    }    
 });
 
 function nextPlayer() {
@@ -67,6 +72,7 @@ function init() {
   scores = [0,0];
   roundScore = 0;
   activePlayer = 0;
+  gameIsPlaying = true;
 
   //Ocultando o dado inicialmente
   document.querySelector('.dice').style.display = 'none';
