@@ -14,7 +14,7 @@ init();
 document.querySelector('.btn-roll').addEventListener('click', () => {
   if(gameIsPlaying) {
     // 1. Número Randômico
-    let dice = Math.ceil(Math.random() * 6);
+    let dice = Math.ceil(Math.random() * 3);
 
     // 2. Mostrar o Resultado
     const diceDOM = document.querySelector('.dice');
@@ -22,10 +22,27 @@ document.querySelector('.btn-roll').addEventListener('click', () => {
     diceDOM.src = 'dice-' + dice + '.png';
     
     // 3. Atualizar a pontuação da rodada SE o nº obtivo NÃO for 1
-    if(dice > 1) {
-      // Adicionar valor do dice ao roundScore
-      roundScore += dice;
-      document.querySelector('#current-' + activePlayer).textContent = roundScore;
+    if(dice > 1) {      
+      // Checar se dois 6 foram rolados em sequência
+      if (roundScore === 3 && roundPrevScore === 3) {
+        scores[activePlayer] = 0;
+        document.getElementById('score-' + activePlayer).textContent = '0';
+
+        console.log("Round: " + roundScore);
+        console.log("Prev:  " + roundPrevScore);
+        console.log("Active:  " + scores[activePlayer]);
+        nextPlayer();
+      } else {
+        // Adicionar valor do dice ao roundScore
+        roundScore += dice;
+        document.getElementById('current-' + activePlayer).textContent = roundScore;       
+
+        console.log("Round: " + dice);
+        console.log("Prev:  " + roundPrevScore);
+        console.log("Active:  " + scores[activePlayer]);
+        
+        roundPrevScore = dice;
+      }     
     } else {
       // Próximo jogador
       nextPlayer();
@@ -33,28 +50,29 @@ document.querySelector('.btn-roll').addEventListener('click', () => {
   }	
 });
 
-  document.querySelector('.btn-hold').addEventListener('click', () => {
-    if(gameIsPlaying) {
-      //Adicionar roundScore a pontuação global do jogador ativo
-      scores[activePlayer] += roundScore;
-      //Atualizar a UI
-      document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
-      //Checar se o jogador ganhou o jogo
-      if(scores[activePlayer] >= 20) {
-        document.getElementById('name-' + activePlayer).textContent = 'Winner!';
-        document.querySelector('.dice').style.display = 'none';
-        document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
-        document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
-        gameIsPlaying = false;
-      } else {
-        nextPlayer();
-      }
-    }    
+document.querySelector('.btn-hold').addEventListener('click', () => {
+  if(gameIsPlaying) {
+    //Adicionar roundScore a pontuação global do jogador ativo
+    scores[activePlayer] += roundScore;
+    //Atualizar a UI
+    document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
+    //Checar se o jogador ganhou o jogo
+    if(scores[activePlayer] >= 100) {
+      document.getElementById('name-' + activePlayer).textContent = 'Winner!';
+      document.querySelector('.dice').style.display = 'none';
+      document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+      document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+      gameIsPlaying = false;
+    } else {
+      nextPlayer();
+    }
+  }    
 });
 
 function nextPlayer() {
   activePlayer = (activePlayer) ? 0 : 1;    
     roundScore = 0;
+    roundPrevScore = 0;
     document.getElementById('current-0').textContent = '0';
     document.getElementById('current-1').textContent = '0';
 
@@ -68,7 +86,7 @@ document.querySelector('.btn-new').addEventListener('click', init);
 
 function init() {
   //Setando valores iniciais
-  scores = [0,0];
+  scores = [10,10];
   roundScore = 0;
   roundPrevScore = 0;
   activePlayer = 0;
@@ -78,8 +96,8 @@ function init() {
   document.querySelector('.dice').style.display = 'none';
 
   //Setando scores iniciais para zero
-  document.getElementById('score-0').textContent = '0';
-  document.getElementById('score-1').textContent = '0';
+  document.getElementById('score-0').textContent = '10';
+  document.getElementById('score-1').textContent = '10';
   document.getElementById('current-0').textContent = '0';
   document.getElementById('current-1').textContent = '0';
   document.getElementById('name-0').textContent = 'Player 1';
