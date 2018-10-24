@@ -7,7 +7,7 @@ GAME RULES:
 - The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
 - The first player to reach 100 points on GLOBAL score wins the game
 */
-let scores, roundScores, activePlayer, gameIsPlaying;
+let scores, roundScores, activePlayer, gameIsPlaying, lastDice;
 
 init();
 
@@ -22,6 +22,9 @@ document.querySelector('.btn-roll').addEventListener('click', () => {
     diceDOM.src = 'dice-' + dice + '.png';
     
     // 3. Atualizar a pontuação da rodada SE o nº obtivo NÃO for 1
+    if (dice === 6 && lastDice) {
+      // O Jogador perde a pontuação     
+    }
     if(dice > 1) {            
       // Adicionar valor do dice ao roundScore
       roundScore += dice;
@@ -31,6 +34,8 @@ document.querySelector('.btn-roll').addEventListener('click', () => {
       // Próximo jogador
       nextPlayer();
     }
+
+    lastDice = dice;
   }	
 });
 
