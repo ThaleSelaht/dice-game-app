@@ -22,8 +22,11 @@ document.querySelector('.btn-roll').addEventListener('click', () => {
     diceDOM.src = 'dice-' + dice + '.png';
     
     // 3. Atualizar a pontuação da rodada SE o nº obtivo NÃO for 1
-    if (dice === 6 && lastDice) {
-      // O Jogador perde a pontuação     
+    if (dice === 6 && lastDice === 6) {
+      // O Jogador perde a pontuação    
+      scores[activePlayer] = 0;
+      windows.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
+      nextPlayer(); 
     }
     if(dice > 1) {            
       // Adicionar valor do dice ao roundScore
